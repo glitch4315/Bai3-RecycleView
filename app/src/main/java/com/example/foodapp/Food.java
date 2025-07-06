@@ -5,22 +5,22 @@ import android.os.Parcelable;
 
 public class Food implements Parcelable {
     private String name;
+    private int imageResource;
     private String description;
-    private int imageResId;
-    private double price;
+    private int price;
 
-    public Food(String name, int imageResId, String description, double price) {
+    public Food(String name, int imageResource, String description, int price) {
         this.name = name;
-        this.imageResId = imageResId;
+        this.imageResource = imageResource;
         this.description = description;
         this.price = price;
     }
 
     protected Food(Parcel in) {
         name = in.readString();
+        imageResource = in.readInt();
         description = in.readString();
-        imageResId = in.readInt();
-        price = in.readDouble();
+        price = in.readInt();
     }
 
     public static final Creator<Food> CREATOR = new Creator<Food>() {
@@ -35,6 +35,22 @@ public class Food implements Parcelable {
         }
     };
 
+    public String getName() {
+        return name;
+    }
+
+    public int getImageResource() {
+        return imageResource;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -43,24 +59,8 @@ public class Food implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
+        parcel.writeInt(imageResource);
         parcel.writeString(description);
-        parcel.writeInt(imageResId);
-        parcel.writeDouble(price);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public double getPrice() {
-        return price;
+        parcel.writeInt(price);
     }
 }

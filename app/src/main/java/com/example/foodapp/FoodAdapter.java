@@ -26,17 +26,17 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             super(itemView);
             foodImageView = itemView.findViewById(R.id.foodImageView);
             foodNameTextView = itemView.findViewById(R.id.foodNameTextView);
-            foodDescriptionTextView = itemView.findViewById(R.id.foodDescriptionTextView);
-            foodPriceTextView = itemView.findViewById(R.id.foodPriceTextView);
+            foodDescriptionTextView = itemView.findViewById(R.id.detailDescriptionTextView);
+            foodPriceTextView = itemView.findViewById(R.id.detailPriceTextView);
 
             itemView.setOnClickListener(v -> {
-                // Get the position of the clicked item
+
                 int position = getAdapterPosition();
-                // Ensure the position is valid
+
                 if (position != RecyclerView.NO_POSITION) {
-                    Food clickedFood = foodList.get(position); // Get the Food object
+                    Food clickedFood = foodList.get(position);
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("FoodItem", clickedFood); // Pass the Food object
+                    intent.putExtra("FoodItem", clickedFood);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -53,7 +53,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void onBindViewHolder(FoodViewHolder holder, int position) {
         Food food = foodList.get(position);
         holder.foodNameTextView.setText(food.getName());
-        holder.foodImageView.setImageResource(food.getImageResId());
+
     }
 
     @Override

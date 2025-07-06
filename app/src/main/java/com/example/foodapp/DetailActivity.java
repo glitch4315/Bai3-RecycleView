@@ -1,11 +1,17 @@
 package com.example.foodapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -26,21 +32,33 @@ public class DetailActivity extends AppCompatActivity {
         detailPriceTextView = findViewById(R.id.detailPriceTextView);
         orderButton = findViewById(R.id.orderButton);
 
-
         Food food = getIntent().getParcelableExtra("FoodItem");
 
         if (food != null) {
-            detailImageView.setImageResource(food.getImageResId());
             detailTextView.setText(food.getName());
             detailDescriptionTextView.setText(food.getDescription());
-            detailPriceTextView.setText(String.format("%.0f VND", food.getPrice()));
+            detailPriceTextView.setText("Giá: " + food.getPrice() + " VNĐ");
+            detailImageView.setImageResource(food.getImageResource());
 
-            orderButton.setOnClickListener(v ->
-                    Toast.makeText(this, "Đặt hàng thành công! " + food.getName(), Toast.LENGTH_SHORT).show()
-            );
-        } else {
-            Toast.makeText(this, "Không có dữ liệu món ăn!", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity if no data is passed
+
+            SharedPreferences prefs = getSharedPreferences("FoodPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("last_viewed_food", food.getName());
+            editor.apply();
+
+            orderButton.setOnClickListener(v -> {
+                SharedPreferences pref = getSharedPreferences("FoodPrefs", Context.MODE_PRIVATE);
+                Set<String> orderedFoods = pref.getStringSet("ordered_foods", new HashSet<>());
+
+                Set<String> updatedFoods = new HashSet<>(orderedFoods);
+                updatedFoods.add(food.getName());
+
+                SharedPreferences.Editor ed = pref.edit();
+                ed.putStringSet("ordered_foods", updatedFoods);
+                ed.apply();
+
+                Toast.makeText(this, "Đã gọi món: " + food.getName(), Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }
